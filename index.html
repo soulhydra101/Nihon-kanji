@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanji Flashcard Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 10px;
+    }
+    .game-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+    }
+    .kanji {
+      font-size: 64px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .reading {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+    button.option {
+      padding: 12px;
+      font-size: 18px;
+      border: none;
+      background: #87cefa;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button.option:hover {
+      background: #4682b4;
+      color: white;
+    }
+    .score-bar {
+      height: 20px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .score-fill {
+      height: 100%;
+      background: #4caf50;
+      width: 0%;
+      transition: width 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="kanji" id="kanji">?</div>
+    <div class="reading" id="reading"></div>
+    <div class="options" id="options"></div>
+    <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
+  </div>
+
+  <script>
+    const kanjiData = [
+      { kanji: "一", meaning: "One いち" },
+      { kanji: "二", meaning: "Two に" },
+      { kanji: "三", meaning: "Three さん" },
+      { kanji: "四", meaning: "Four し / よん" },
+      { kanji: "五", meaning: "Five ご" },
+      { kanji: "六", meaning: "Six ろく" },
+      { kanji: "七", meaning: "Seven しち / なな" },
+      { kanji: "八", meaning: "Eight はち" },
+      { kanji: "九", meaning: "Nine きゅう / く" },
+      { kanji: "十", meaning: "Ten じゅう" },
+      { kanji: "百", meaning: "Hundred ひゃく" },
+      { kanji: "千", meaning: "Thousand せん" },
+      { kanji: "万", meaning: "Ten Thousand まん" },
+      { kanji: "人", meaning: "Person ひと" },
+      { kanji: "子", meaning: "Child こ" },
+      { kanji: "男", meaning: "Man おとこ" },
+      { kanji: "女", meaning: "Woman おんな" },
+      { kanji: "山", meaning: "Mountain やま" },
+      { kanji: "川", meaning: "River かわ" },
+      { kanji: "木", meaning: "Tree き" },
+      { kanji: "花", meaning: "Flower はな" },
+      { kanji: "土", meaning: "Earth つち" },
+      { kanji: "火", meaning: "Fire ひ" },
+      { kanji: "水", meaning: "Water みず" },
+      { kanji: "金", meaning: "Gold/Money きん / かね" },
+      { kanji: "月", meaning: "Moon/Month つき / がつ" },
+      { kanji: "日", meaning: "Sun/Day ひ / にち" },
+      { kanji: "上", meaning: "Up/Above うえ" },
+      { kanji: "下", meaning: "Down/Below した" },
+      { kanji: "中", meaning: "Middle なか" },
+      { kanji: "入", meaning: "Enter いり / はいる" },
+      { kanji: "学", meaning: "Study がく" },
+      { kanji: "校", meaning: "School こう" },
+      { kanji: "大", meaning: "Big おおきい" },
+      { kanji: "小", meaning: "Small ちいさい" },
+      { kanji: "生", meaning: "Life/Student せい / いきる" },
+      { kanji: "年", meaning: "Year ねん" },
+      { kanji: "行", meaning: "Go/Act いく / こう" },
+      { kanji: "見", meaning: "See/Look みる" },
+      { kanji: "毎", meaning: "Every まい" },
+      { kanji: "円", meaning: "Yen/Circle えん" }
+    ];
+
+    let score = 0;
+    const kanjiEl = document.getElementById("kanji");
+    const optionsEl = document.getElementById("options");
+    const readingEl = document.getElementById("reading");
+    const scoreFill = document.getElementById("scoreFill");
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function newRound() {
+      optionsEl.innerHTML = "";
+      const question = kanjiData[Math.floor(Math.random() * kanjiData.length)];
+      kanjiEl.textContent = question.kanji;
+
+      let options = [question.meaning];
+      while (options.length < 4) {
+        const random = kanjiData[Math.floor(Math.random() * kanjiData.length)].meaning;
+        if (!options.includes(random)) options.push(random);
+      }
+
+      shuffle(options).forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === question.meaning) {
+            score++;
+          } else {
+            score = 0;
+          }
+          scoreFill.style.width = `${Math.min(score * 5, 100)}%`;
+          newRound();
+        };
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    newRound();
+  </script>
+</body>
+</html>

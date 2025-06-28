@@ -68,6 +68,12 @@
       width: 0%;
       transition: width 0.3s;
     }
+    .feedback {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 16px;
+      color: #d9534f;
+    }
   </style>
 </head>
 <body>
@@ -75,6 +81,7 @@
     <div class="kanji" id="kanji">?</div>
     <div class="reading" id="reading"></div>
     <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
     <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
   </div>
 
@@ -128,6 +135,7 @@
     const optionsEl = document.getElementById("options");
     const readingEl = document.getElementById("reading");
     const scoreFill = document.getElementById("scoreFill");
+    const feedbackEl = document.getElementById("feedback");
 
     function shuffle(array) {
       return array.sort(() => Math.random() - 0.5);
@@ -135,6 +143,7 @@
 
     function newRound() {
       optionsEl.innerHTML = "";
+      feedbackEl.textContent = "";
       const question = kanjiData[Math.floor(Math.random() * kanjiData.length)];
       kanjiEl.textContent = question.kanji;
 
@@ -151,11 +160,15 @@
         btn.onclick = () => {
           if (opt === question.meaning) {
             score++;
+            feedbackEl.textContent = "Correct!";
+            feedbackEl.style.color = "green";
           } else {
+            feedbackEl.textContent = `Wrong! Correct answer: ${question.meaning}`;
+            feedbackEl.style.color = "#d9534f";
             score = 0;
           }
           scoreFill.style.width = `${Math.min(score * 5, 100)}%`;
-          newRound();
+          setTimeout(newRound, 1500);
         };
         optionsEl.appendChild(btn);
       });
